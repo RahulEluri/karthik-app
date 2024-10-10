@@ -1,0 +1,62 @@
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-10">
+      <input
+        type="text"
+        class="form-control mb-3"
+        placeholder="Search for locations..."
+        [(ngModel)]="searchTerm"
+      />
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary mb-3 w-100" (click)="searchLocation()">
+        Search
+      </button>
+    </div>
+  </div>
+
+  <google-map height="500px" width="100%" [center]="center" [zoom]="zoom">
+    <map-marker
+      *ngFor="let location of filteredLocations"
+      [position]="location"
+      [icon]="getMarkerIcon(location)"
+      (mapClick)="openOffCanvas(location)"
+    >
+    </map-marker>
+  </google-map>
+</div>
+
+<!-- Bootstrap Offcanvas -->
+<div
+  #offcanvasElement
+  class="offcanvas offcanvas-end offcanvas-custom"
+  tabindex="-1"
+>
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">{{ selectedLocation?.label }}</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="offcanvas-body" style="height: 100vh">
+    <p>{{ selectedLocation?.description }}</p>
+
+    <!-- Ngx-Charts Bar Chart with dynamic colors -->
+    <ngx-charts-bar-vertical
+      [results]="selectedLocation?.weatherData"
+      [xAxis]="true"
+      [yAxis]="true"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      xAxisLabel="Day"
+      yAxisLabel="Temperature (°C)"
+      [barPadding]="5"
+      [roundEdges]="true"
+      [customColors]="customColors"
+    >
+    </ngx-charts-bar-vertical>
+  </div>
+</div>
